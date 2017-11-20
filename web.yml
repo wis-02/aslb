@@ -1,0 +1,58 @@
+version: '3.1'
+
+services:
+
+  server:
+    image:   localhost:5000/mynginx
+    volumes:
+       - $PWD/html:/usr/share/nginx/html
+    environment:
+      - DB=db
+    networks:
+      - proxy
+      - monitor
+    deploy:
+      replicas: 2
+      update_config:
+        parallelism: 1
+        delay: 10s
+      labels:
+        - com.df.notify=true
+        - com.df.distribute=true
+        - com.df.servicePath=/
+        - com.df.port=80        
+        - com.df.scaleMin=2
+        - com.df.scaleMax=6
+        - com.df.scrapePort=9145
+        - com.df.alertName.1=memlimit
+        - com.df.alertIf.1=@service_mem_limit:0.8
+        - com.df.alertFor.1=5m
+        - com.df.alertName.2=resptimeabovein
+        - com.df.alertIf.2= irate(nginx_http_request_duration_seconds_count{host="192.168.99.100",job="web_server"}[5m]) > 5
+        - com.df.alertLabels.2=receiver=system,scale=up,service=web_server,type=service
+        - com.df.alertAnnotations.2=summary=Response time of the service web_server is above 5
+        - com.df.alertName.3=resptimebelowin
+        - com.df.alertIf.3=irate(nginx_http_request_duration_seconds_count{host="192.168.99.100",job="web_server"}[5m]) < 2
+        - com.df.alertLabels.3=receiver=system,scale=down,service=web_server,type=service
+        - com.df.alertAnnotations.3=summary=Response time of the service web_server is below 2      
+      resources:
+        reservations:
+          memory: 5M
+        limits:
+          memory: 10M      
+  db:
+    image: mongo
+    networks:
+      - proxy
+    deploy:
+      resources:
+        reservations:
+          memory: 40M
+        limits:
+          memory: 80M
+
+networks:
+  proxy:
+    external: true
+  monitor:
+    external: true
