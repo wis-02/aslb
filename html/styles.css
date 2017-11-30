@@ -1,0 +1,63 @@
+body { 
+background-color: #18b9e7; 
+font-family: Tahoma, Geneva, sans-serif; 
+font-size: 15px; 
+color: black;
+margin-top: 5px;
+margin-bottom: 50px;
+margin-left: 50px;
+margin-right: 50px;
+}
+
+.left{
+    width: 20%;
+    float: left;
+}
+
+ul.nav {
+    list-style-type: none;
+    width: 15%;
+    margin-top: 15px;
+    background-color: #18b9e7;
+    height: 100%; /* Full height */
+    position: fixed;  /*Make it stick, even on scroll */
+    overflow: auto; /* Enable scrolling if the sidenav has too much content */
+}
+
+strong { font-family: font-family: Tahoma, Geneva, sans-serif; color: black }
+
+a { font-family: Tahoma, Geneva, sans-serif; font-size: 15px; color: black; text-decoration: underline}
+
+a:hover { font-family: Tahoma, Geneva, sans-serif; font-size: 15px; color: black; background-color: white}
+
+p{ font-family: font-family: Tahoma, Geneva, sans-serif; color: black }
+
+h1 { font-family: Tahoma, Geneva, sans-serif; font-size: 29px; color: black }
+h2 { font-family: Tahoma, Geneva, sans-serif; font-size: 21px; color: black }
+h3 { font-family: Tahoma, Geneva, sans-serif; color: black }
+h4 { font-family: Tahoma, Geneva, sans-serif; color: black }
+
+hr{ color: #18b9e7; background-color: #2a4570; width:90%; height:2px;} 
+
+table {
+font-family: Tahoma, Geneva, sans-serif;
+font-size: 15px;
+color: black;
+margin-top: 0px;
+margin-right: 0px;
+margin-bottom: 0px;
+margin-left: 0px;
+padding-top: 0px;
+padding-right: 0px;
+padding-bottom: 0px;
+padding-left: 0px;
+}
+
+li { font-family: font-family: Tahoma, Geneva, sans-serif; color: black }
+
+.note {
+font-family: Tahoma, Geneva, sans-serif;
+font-size: 15px;
+color: black;
+font-weight: bold;
+} 

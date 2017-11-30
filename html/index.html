@@ -1,0 +1,154 @@
+<html> 
+
+<head>
+	<link rel="stylesheet" href="styles.css">
+	<title>Swarm Based Load Balancing on Docker</title> 
+</head> 
+
+<body>
+
+<h1><center>Load Balancing using Docker Containers as Services</center></h1> 
+
+<center><img src="images/docker.png" alt="Docker"></center>
+
+<p><center><strong>Home</strong> | <a href="ProjectManagement.html">Project Management</a>  | <a href="DataAnalysis.html">Data Analysis</a> | <a href="Testing.html">Testing</a> | <a href="ProjectDesign.html">Project Design</a></center></p>
+
+<h3><center><a href="files/ProjectFiles.zip">Project Files</a></center></h3>
+<h3><center><a href="files/ProjectDocumentation.pdf">Project Documentation (PDF)</a></center></h3>
+<h3><center><a href="files/ProjectDocumentation.docx">Project Documentation (DOCX)</a></center></h3>
+<h3><center><a href="files/FinalPresentation.pptx">Final Presentation</a></center></h3>
+
+<h2>Project Requirements</h2>
+
+<h3>Project Description</h3>
+
+<p>Thanks to  Ryan Caudill,Daniel McCade Freeman,Drew Jones,Colton Smith.</p>
+<p>Docker containers are a popular technology for creating running instances of images. They can be used to hold web servers, utility code, web services, database instances, etc. They are more lightweight than VMs and many pre-configured instances are already available (alpine, nginx, etc).
+
+<p>Load balancing is a real world issue that addresses server load by exposing a single web address on the internet and routing it to a collection of servers. Several different algorithms can be used to select which server to forward a request to (e.g. round robin, least connections, least response time, etc).
+
+<p>In order to verify the implementation of the load balancer, it is necessary to be able to start several web servers and a multitude of clients. Docker is a good tool to provide this capability.
+
+<p>The goal of this project is twofold. The first part is to design and implement a load balancer. The second part is to learn Docker to be able to spin up instances of servers and clients. How many instances can be served up on each Docker computer?
+
+<p><a href="files/ProjectDescription.docx" download>Read a detailed project description here</a>
+
+<h3>Specifications</h3>
+
+<ul>
+	<li>Unix-based docker containers will be used to implement a load balancer, multiple webservers, and multiple clients</li>
+	<li>Multiple webservers will share content so that all servers provide the same responses.</li>
+	<li>Load Balancing system will be implemented as Docker Swarms and Nginx. Swarms allow a master container to direct traffic to child containers, while Nginx will allow for analysis.</li>
+	<li>Clients will be written as bash scripts that continuously pull text and/or image files from the servers.</li>
+	<li>Number of clients and webservers running on a single computer will be documented and optimized based on resource usage.</li>
+	<li>Various load balancing methods will be implemented to handle the incoming client connections.</li>
+	<li>Performance analysis will be conducted on transactions/second and bytes transferred/second per webserver and overall, effects of request types (file type and size), and how different load balancing methods affect our performance.</li>	
+</ul>
+
+<h4>Links for more information</h4>
+
+<ul>
+	<li><a href="https://www.docker.com/what-docker">Docker Containers</a></li>
+	<li><a href="https://nginx.org/en/">Nginx</a></li>
+	<li><a href="https://www.docker.com/products/docker-swarm">Docker Swarms</a></li>
+	<li><a href="https://alpinelinux.org">Alpine Linux</a></li>
+</ul>
+
+<h2>Project Design</h2>
+<h3>Overview</h3>
+
+<p>Docker containers are a popular technology for creating running instances of images. They can be used to hold web servers, utility code, web services, database instances, etc. They are more lightweight than VMs and many pre-configured instances are already available (alpine, nginx, etc).</p>
+
+<p>Load balancing is a real world issue that addresses server load by exposing a single web address on the internet and routing it to a collection of servers. Several different algorithms can be used to select which server to forward a request to (e.g. round robin, least connections, least response time, etc).</p>
+
+<p>In order to verify the implementation of the load balancer, it is necessary to be able to start several web servers and a multitude of clients. Docker is a good tool to provide this capability.
+The goal of this project is twofold. The first part is to design and implement a load balancer. The second part is to learn Docker to be able to spin up instances of servers and clients.</p>
+
+<h3>Environment</h3>
+
+<p>We will be using Linux based dockers that can be run on any platform. Specifically we are using Alpine-based Linux as it is small and easy to use, allowing us to spin up more instances of clients/servers. Additional commands for running linux commands will be installed to fit our needs. For our server we will be using Nginx servers placed within nodes of a Docker Swarm. We will not extensively be testing different machines and platforms, but any machine with the ability to run a linux environment should be able to use our product. We will be testing on a couple of different Windows, Mac, and Linux machines.</p>
+
+<h3>Overall Data Flow</h3>
+
+<center><img src="images/overallDataFlow.jpg" alt="Overall Data Flow"></center>
+
+<p>Our project is divided up into three separate stages: client, load balancer, server
+We want to be able to spin up numerous clients simultaneously using docker containers and have them access our server.</p>
+
+<p>Client containers will have the following files:
+<ul>
+	<li>Dockerfile: configure file of docker container image</li>
+	<li>downloadFiles.sh: bash script to download files from url</li>
+	<li>url: text file containing url visited by downloadFiles.sh</li>
+	<li>clientStats (directory): log files for client container are stored here</li>
+	<li>runClient.sh: runs downloadFiles.sh by passing it the url txt file</li>
+</ul></p>
+
+<h4>Client Diagram</h4>
+<center><img src="images/clientDiagram.jpg" alt="Client Diagram"></center>
+
+<h4>Load Balancer</h4>
+
+<p>The load balancer will redirect each client to a specified server, managing how client requests are handled. Here we specifically want to be able to run different load balancing algorithms that we can later compare. For our initial load balancing algorithm we will use a simple round-robin method of determining which server a client will access. The load balancer will send the first request to the first server, the second request to the second server, and so forth, sending the "n+1"st request to the first server (assuming n servers).</p>
+
+<h4>Server</h4>
+
+<p>We will be using docker containers to spin up multiple servers as well to handle the incoming requests of the clients. To do this we will be using Nginx servers and Dockers swarm mode. Containers within Docker Swarm are called nodes, of which we will have two types: a Master node and a Worker node. The worker nodes will be our Nginx servers and the master node will manage how these servers are used. Inputs to the servers will be the requests from the clients. Outputs from the servers will be external and internal: external outputs being the information that the client requested, internal outputs being the runtime data that will be used in the next section.</p>
+
+<h4>Server Diagram</h4>
+<center><img src="images/serverDiagram.jpg" alt="Server Diagram"></center>
+
+<p>Lastly we will have some sort of data collection, which will be able to report and manage pertinent details. We want to measure and compare the following:
+<ul>
+        <li>Transactions per second</li>
+        <li>Bytes transferred per second (per webserver)</li>
+        <li>Effects of different request types (size/type of file being pulled by client)</li>
+        <li>Effects of different load balancing methoids</li>
+</ul></p>
+
+<p>Once the initial framework is in place, the next step is to test additional features of the load balancer (change load balancing algorithm), clients (see how many we can run in parallel), servers (potentially multi-threading), etc. These additional features will be completed as time permits for the project.</p>
+
+<h4>User Interface</h4>
+
+<p>Our entire product will be accessed using the command line interface of dockers. From the
+dockers CLI, client and server generation scripts can be called to run our product. The load
+balancing section will be incorporated into the server generation scripts, and if time permits,
+command line arguments will be incorporated to allow the user to choose between differing load
+balancing arguments. Additionally the number of clients/servers generated will be hard-coded,
+but if time permits we will allow for the number of clients generated to be specified with
+command line arguments. Number of servers generated will require more input that generating
+additional clients. It is unlikely that this could be specified from command line arguments, but we
+will look into the possibility of adding this once we find out how complex this feature will be.
+Lastly, all gathered data will be put into a simple text document for each time the client scripts
+are run. Results can be viewed by opening this text document in a text editor.</p>
+
+<h4>Sizings</h4>
+
+<p>Most of the coding done will be small bash scripts that setup the environment and specify how
+the containers will interact with one another. Instead of having large segments of code, we will
+have small scripts that we can attribute to one of our three modules: client, load balancer, or
+server.
+<ul>
+	<li>Client: ~54 lines of code; all custom scripts</li>
+	<li>Load-Balancer: ~29 lines of code; custom scripts that build on a base Nginx image</li>
+	<li>Server: ~68 lines of code; custom scripts that build on a base Nginx image</li>
+</ul></p>
+
+<h2>Test Plan</h2>
+
+<p>Our test plan can be found <a href="files/TestPlan.docx">here</a></p>
+
+
+<!--
+<p> This is a new paragraph! 
+
+<p> <b>This is a new paragraph!</b> 
+
+<br> <b><i>This is a new sentence without a paragraph break, in bold italics.</i></b> 
+-->
+
+<hr> 
+
+</body> 
+
+</html> 

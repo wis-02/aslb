@@ -1,0 +1,243 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=windows-1252"/>
+	<title>Swarm Based Load Balancing on Docker</title>
+	<meta name="generator" content="LibreOffice 5.4.0.3 (Windows)"/>
+	<meta name="created" content="00:00:00"/>
+	<meta name="changed" content="2017-10-26T12:19:28.779000000"/>
+	<style type="text/css">
+		p { margin-left: 0.52in; margin-right: 0.52in; color: #000000; font-family: "font-family"; font-size: 11pt }
+		td p { margin-left: 0.52in; margin-right: 0.52in; color: #000000; font-family: "font-family"; font-size: 11pt }
+		h1 { margin-left: 0.52in; margin-right: 0.52in; color: #000000; font-family: "Tahoma", "Geneva", sans-serif; font-size: 21pt }
+		h2 { margin-left: 0.52in; margin-right: 0.52in; color: #000000; font-family: "Tahoma", "Geneva", sans-serif; font-size: 15pt }
+		h3 { margin-left: 0.52in; margin-right: 0.52in; color: #000000; font-family: "Tahoma", "Geneva", sans-serif }
+		th p { margin-left: 0.52in; margin-right: 0.52in; color: #000000; font-family: "font-family"; font-size: 11pt }
+		a:link { color: #000000; font-family: "Tahoma", "Geneva", sans-serif; font-size: 11pt }
+		strong { font-family: "font-family" }
+		a:visited { color: #000000; font-family: "Tahoma", "Geneva", sans-serif; font-size: 11pt }
+	</style>
+</head>
+<body lang="en-US" text="#000000" link="#000000" vlink="#000000" bgcolor="#18b9e7" dir="ltr">
+<h1 align="center">Load Balancing using Docker Containers as Services</h1>
+<p align="center"><img src="images/docker.png" name="Image1" alt="Docker" align="bottom" width="909" height="260" border="0"/>
+</p>
+<p align="center"><a href="index.html">Home</a> | <a href="ProjectManagement.html">Project Management</a> | <strong>Data Analysis </strong> | <a href="Testing.html">Testing</a> | <a href="ProjectDesign.html">Project Design</a></p>
+<h2>Data Analysis</h2>
+<p>Data Analysis / Testing</p>
+<h3><!-- <h2>A picture of me:</h2>
+<img src="images/Ryan.jpg" alt="Bear and Spazz" style="width:304px;height:304px;">
+-->Activity</h3>
+<center>
+	<table cellpadding="2" cellspacing="2">
+		<tr>
+			<th style="border: none; padding: 0in">
+				<p>February 12, 2017</p>
+			</th>
+		</tr>
+		<tr>
+			<td style="border: none; padding: 0in">
+				<p align="justify" style="margin-left: 0in; margin-right: 0in; orphans: 2; widows: 2">
+				<span style="font-variant: normal"><font color="#000000"><font face="Open Sans, Arial, sans-serif"><font size="2" style="font-size: 10pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">Aliquam
+				eget lacus enim. Vestibulum augue ex, ullamcorper eu volutpat
+				eget, condimentum nec neque. Donec vulputate nunc ligula, a
+				faucibus metus tempus eget. Nulla facilisi. Nam quis neque a diam
+				feugiat finibus. Aliquam erat urna, tempor et turpis placerat,
+				mattis ullamcorper erat. Vestibulum porta viverra ex non
+				bibendum. Aenean iaculis interdum diam non pulvinar. Praesent
+				dignissim, nisi in sodales aliquet, tellus nibh porttitor magna,
+				a mollis felis turpis in nunc.</span></span></span></font></font></font></span>
+								</p>
+			</td>
+		</tr>
+	</table>
+</center>
+<center>
+	<table cellpadding="2" cellspacing="2">
+		<tr>
+			<th style="border: none; padding: 0in">
+				<p>February 19, 2017</p>
+			</th>
+		</tr>
+		<tr>
+			<td style="border: none; padding: 0in">
+				<p align="justify" style="margin-left: 0in; margin-right: 0in; orphans: 2; widows: 2">
+				<span style="font-variant: normal"><font color="#000000"><font face="Open Sans, Arial, sans-serif"><font size="2" style="font-size: 10pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">Nullam
+				fermentum, nulla facilisis molestie fringilla, augue massa
+				sollicitudin massa, a mollis enim urna luctus risus. Aenean
+				posuere ac enim in fringilla. Mauris ut pretium turpis, quis
+				feugiat felis.</span></span></span></font></font></font></span> 
+				</p>
+			</td>
+		</tr>
+	</table>
+</center>
+<center>
+	<table cellpadding="2" cellspacing="2">
+		<tr>
+			<th style="border: none; padding: 0in">
+				<p>February 26, 2017</p>
+			</th>
+		</tr>
+		<tr>
+			<td style="border: none; padding: 0in">
+				<p align="justify" style="margin-left: 0in; margin-right: 0in; orphans: 2; widows: 2">
+				<span style="font-variant: normal"><font color="#000000"><font face="Open Sans, Arial, sans-serif"><font size="2" style="font-size: 10pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">Suspendisse
+				porttitor, metus a efficitur consectetur, diam magna malesuada
+				urna, ac tempor purus tortor non metus. Donec sit amet est vitae
+				lacus bibendum ullamcorper nec et velit. Nulla non sapien eu est
+				fringilla interdum. Quisque cursus mi in libero ultrices ultrices</span></span></span></font></font></font></span>
+								</p>
+			</td>
+		</tr>
+	</table>
+</center>
+<center>
+	<table cellpadding="2" cellspacing="2">
+		<tr>
+			<th style="border: none; padding: 0in">
+				<p>March 5, 2017</p>
+			</th>
+		</tr>
+		<tr>
+			<td style="border: none; padding: 0in">
+				<p align="justify" style="margin-left: 0in; margin-right: 0in; orphans: 2; widows: 2">
+				<span style="font-variant: normal"><font color="#000000"><font face="Open Sans, Arial, sans-serif"><font size="2" style="font-size: 10pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">Duis
+				augue eros, feugiat eget quam aliquet, elementum facilisis urna.
+				Quisque pretium justo id felis porttitor gravida. Pellentesque
+				facilisis aliquet metus. Duis a faucibus nisl. Suspendisse
+				imperdiet urna id magna finibus, nec lacinia augue euismod. Sed
+				tristique ultrices tellus, eu sodales ipsum faucibus id. Quisque
+				vitae euismod nisl. Sed eget aliquet nisl, a accumsan leo. Nullam
+				felis augue, viverra euismod turpis ut, rhoncus ultrices massa.
+				Morbi luctus iaculis sapien. Nulla dolor orci, fringilla eu
+				varius vitae, rutrum non augue. Donec sodales ipsum non ante
+				pellentesque sollicitudin. Donec ut ligula est. Sed nisi lorem,
+				dapibus in ipsum vitae, lobortis pulvinar erat.</span></span></span></font></font></font></span>
+								</p>
+			</td>
+		</tr>
+	</table>
+</center>
+<center>
+	<table cellpadding="2" cellspacing="2">
+		<tr>
+			<th style="border: none; padding: 0in">
+				<p>March 12, 2017</p>
+			</th>
+		</tr>
+		<tr>
+			<td style="border: none; padding: 0in">
+				<p align="justify" style="margin-left: 0in; margin-right: 0in; orphans: 2; widows: 2">
+				<span style="font-variant: normal"><font color="#000000"><font face="Open Sans, Arial, sans-serif"><font size="2" style="font-size: 10pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">Morbi
+				non convallis orci, eget molestie enim. Morbi rutrum pellentesque
+				elit. Nunc eget arcu tempus neque sodales consectetur non vel
+				felis. Fusce vulputate neque ac quam aliquam aliquam. In iaculis
+				efficitur nisl, in consectetur ligula tincidunt in. Sed gravida,
+				metus eget pretium vulputate, lacus mauris feugiat eros, sit amet
+				semper mauris enim non metus. Praesent rutrum in nulla at
+				faucibus</span></span></span></font></font></font></span> 
+				</p>
+			</td>
+		</tr>
+	</table>
+</center>
+<center>
+	<table cellpadding="2" cellspacing="2">
+		<tr>
+			<th style="border: none; padding: 0in">
+				<p>March 19, 2017</p>
+			</th>
+		</tr>
+		<tr>
+			<td style="border: none; padding: 0in">
+				<p align="justify" style="margin-left: 0in; margin-right: 0in; orphans: 2; widows: 2">
+				<span style="font-variant: normal"><font color="#000000"><span style="letter-spacing: normal">&nbsp;</span></font></span><span style="font-variant: normal"><font color="#000000"><font face="Open Sans, Arial, sans-serif"><font size="2" style="font-size: 10pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">Quisque
+				sit amet enim auctor, gravida mi non, pellentesque nibh.&nbsp;</span></span></span></font></font></font></span>
+								</p>
+			</td>
+		</tr>
+	</table>
+</center>
+<center>
+	<table cellpadding="2" cellspacing="2">
+		<tr>
+			<th style="border: none; padding: 0in">
+				<p>March 26, 2017</p>
+			</th>
+		</tr>
+		<tr>
+			<td style="border: none; padding: 0in">
+				<p align="justify" style="margin-left: 0in; margin-right: 0in; orphans: 2; widows: 2">
+				<span style="font-variant: normal"><font color="#000000"><font face="Open Sans, Arial, sans-serif"><font size="2" style="font-size: 10pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">Suspendisse
+				in lorem imperdiet, molestie ligula at, efficitur nulla. In in
+				ipsum nibh. Cras faucibus eu ipsum at tempus. Integer quis dui eu
+				odio eleifend luctus. Ut viverra neque sit amet arcu
+				pellentesque, sed gravida libero fringilla.</span></span></span></font></font></font></span>
+								</p>
+			</td>
+		</tr>
+	</table>
+</center>
+<center>
+	<table cellpadding="2" cellspacing="2">
+		<tr>
+			<th style="border: none; padding: 0in">
+				<p>April 2, 2017</p>
+			</th>
+		</tr>
+		<tr>
+			<td style="border: none; padding: 0in">
+				<p align="justify" style="margin-left: 0in; margin-right: 0in; orphans: 2; widows: 2">
+				<span style="font-variant: normal"><font color="#000000"><font face="Open Sans, Arial, sans-serif"><font size="2" style="font-size: 10pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">Lorem
+				ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
+				metus ante, semper nec imperdiet vel, dignissim vitae sapien.
+				Quisque imperdiet purus augue, et vehicula sapien bibendum
+				iaculis. S</span></span></span></font></font></font></span> 
+				</p>
+			</td>
+		</tr>
+	</table>
+</center>
+<center>
+	<table cellpadding="2" cellspacing="2">
+		<tr>
+			<th style="border: none; padding: 0in">
+				<p>April 9, 2017</p>
+			</th>
+		</tr>
+		<tr>
+			<td style="border: none; padding: 0in">
+				<p><span style="font-variant: normal"><font color="#000000"><font face="Open Sans, Arial, sans-serif"><font size="2" style="font-size: 10pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">Lorem
+				ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
+				metus ante, semper nec imperdiet vel, dignissim vitae sapien.
+				Quisque imperdiet purus augue, et vehicula sapien bibendum
+				iaculis. Sed commodo posuere leo nec dapibus. Proin in rutrum
+				risus. Suspendisse aliquet lacus purus, accumsan elementum enim
+				tristique et. Etiam vehicula felis nibh, ut ullamcorper libero
+				bibendum at. Praesent sagittis eros a laoreet tempor. Proin eu
+				eros accumsan, facilisis libero id, aliquam tellus. Integer ipsum
+				nisl, condimentum sit amet porttitor eu, porta nec mauris.
+				Curabitur lorem enim, dignissim sed laoreet ut, porttitor quis
+				magna. Donec porttitor nisl quam. Vestibulum ut sagittis ipsum.</span></span></span></font></font></font></span>
+								</p>
+			</td>
+		</tr>
+	</table>
+</center>
+<center>
+	<table cellpadding="2" cellspacing="2">
+		<tr>
+			<th style="border: none; padding: 0in">
+				<p>April 16, 2017</p>
+			</th>
+		</tr>
+		<tr>
+			<td style="border: none; padding: 0in"></td>
+		</tr>
+	</table>
+</center>
+<hr/>
+
+</body>
+</html>

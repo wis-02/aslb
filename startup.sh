@@ -15,6 +15,7 @@ docker network create -d overlay monitor
 
 docker network create -d overlay proxy
 
+#docker stack deploy -c proxylc.yml proxy
 docker stack deploy -c proxy.yml proxy
 read -n1 -r -p "Press any key to continue..." key
 docker stack ps proxy
